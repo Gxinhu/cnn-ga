@@ -13,26 +13,26 @@ class StatusUpdateTool(object):
     @classmethod
     def clear_config(cls):
         config = configparser.ConfigParser()
-        config.read('global.ini')
+        config.read('/content/cnn-ga/global.ini')
         secs = config.sections()
         for sec_name in secs:
             if sec_name == 'evolution_status' or sec_name == 'gpu_running_status':
                 item_list = config.options(sec_name)
                 for item_name in item_list:
                     config.set(sec_name, item_name, " ")
-        config.write(open('global.ini', 'w'))
+        config.write(open('/content/cnn-ga/global.ini', 'w'))
 
     @classmethod
     def __write_ini_file(cls, section, key, value):
         config = configparser.ConfigParser()
-        config.read('global.ini')
+        config.read('/content/cnn-ga/global.ini')
         config.set(section, key, value)
-        config.write(open('global.ini', 'w'))
+        config.write(open('/content/cnn-ga/global.ini', 'w'))
 
     @classmethod
     def __read_ini_file(cls, section, key):
         config = configparser.ConfigParser()
-        config.read('global.ini')
+        config.read('/content/cnn-ga/global.ini')
         return config.get(section, key)
 
     @classmethod
@@ -251,7 +251,7 @@ class Utils(object):
 
     @classmethod
     def load_cache_data(cls):
-        file_name = './populations/cache.txt'
+        file_name = '/content/cnn-ga/populations/cache.txt'
         _map = {}
         if os.path.exists(file_name):
             f = open(file_name, 'r')
@@ -269,7 +269,7 @@ class Utils(object):
             _acc = indi.acc
             if _key not in _map:
                 Log.info('Add record into cache, id:%s, acc:%.5f' % (_key, _acc))
-                f = open('./populations/cache.txt', 'a+')
+                f = open('/content/cnn-ga/populations/cache.txt', 'a+')
                 _str = '%s;%.5f;%s\n' % (_key, _acc, _str)
                 f.write(_str)
                 f.close()
@@ -277,26 +277,26 @@ class Utils(object):
 
     @classmethod
     def save_population_at_begin(cls, _str, gen_no):
-        file_name = './populations/begin_%02d.txt' % (gen_no)
+        file_name = '/content/cnn-ga/populations/begin_%02d.txt' % (gen_no)
         with open(file_name, 'w') as f:
             f.write(_str)
 
     @classmethod
     def save_population_after_crossover(cls, _str, gen_no):
-        file_name = './populations/crossover_%02d.txt' % (gen_no)
+        file_name = '/content/cnn-ga/populations/crossover_%02d.txt' % (gen_no)
         with open(file_name, 'w') as f:
             f.write(_str)
 
     @classmethod
     def save_population_after_mutation(cls, _str, gen_no):
-        file_name = './populations/mutation_%02d.txt' % (gen_no)
+        file_name = '/content/cnn-ga/populations/mutation_%02d.txt' % (gen_no)
         with open(file_name, 'w') as f:
             f.write(_str)
 
     @classmethod
     def get_newest_file_based_on_prefix(cls, prefix):
         id_list = []
-        for _, _, file_names in os.walk('./populations'):
+        for _, _, file_names in os.walk('/content/cnn-ga/populations'):
             for file_name in file_names:
                 if file_name.startswith(prefix):
                     id_list.append(int(file_name[6:8]))
@@ -307,7 +307,7 @@ class Utils(object):
 
     @classmethod
     def load_population(cls, prefix, gen_no):
-        file_name = './populations/%s_%02d.txt' % (prefix, np.min(gen_no))
+        file_name = '/content/cnn-ga/populations/%s_%02d.txt' % (prefix, np.min(gen_no))
         params = StatusUpdateTool.get_init_params()
         pop = Population(params, gen_no)
         f = open(file_name)
@@ -359,7 +359,7 @@ class Utils(object):
 
         # load the fitness to the individuals who have been evaluated, only suitable for the first generation
         if gen_no == 0:
-            after_file_path = './populations/after_%02d.txt' % (gen_no)
+            after_file_path = '/content/cnn-ga/populations/after_%02d.txt' % (gen_no)
             if os.path.exists(after_file_path):
                 fitness_map = {}
             f = open(after_file_path)
@@ -377,7 +377,7 @@ class Utils(object):
 
     @classmethod
     def read_template(cls):
-        _path = './template/cifar10.py'
+        _path = '/content/cnn-ga/template/cifar10.py'
         part1 = []
         part2 = []
         part3 = []
@@ -469,7 +469,7 @@ class Utils(object):
             _str.append('        %s' % (s))
         _str.extend(part3)
         # print('\n'.join(_str))
-        file_name = './scripts/%s.py' % (indi.id)
+        file_name = '/content/cnn-ga/scripts/%s.py' % (indi.id)
         script_file_handler = open(file_name, 'w')
         script_file_handler.write('\n'.join(_str))
         script_file_handler.flush()
@@ -490,5 +490,5 @@ if __name__ == '__main__':
     #     u = Utils()
     #     u.generate_pytorch_file(indi)
     _str = 'test\n test1'
-    _file = './populations/ENV_00.txt'
+    _file = '/content/cnn-ga/populations/ENV_00.txt'
     Utils.write_to_file(_str, _file)
