@@ -43,7 +43,7 @@ class FitnessEvaluate(object):
 #                 cls_obj = _class()
 #                 cls_obj.do_work('1', file_name)
                 has_evaluated_offspring = True
-                time.sleep(60)
+                time.sleep(10)
                 gpu_id = GPUTools.detect_available_gpu_id()
                 while gpu_id is None:
                     time.sleep(300)

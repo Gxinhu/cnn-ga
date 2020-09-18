@@ -1,4 +1,6 @@
 """
+2020-09-18  10:56:11
+"""
 from __future__ import print_function
 import torch
 from torch.autograd import Variable
@@ -38,11 +40,33 @@ class BasicBlock(nn.Module):
 class EvoCNNModel(nn.Module):
     def __init__(self):
         super(EvoCNNModel, self).__init__()
-        #generated_init
+
+        #conv unit
+        self.conv_3_256 = BasicBlock(in_planes=3, planes=256)
+        self.conv_256_256 = BasicBlock(in_planes=256, planes=256)
+        self.conv_256_128 = BasicBlock(in_planes=256, planes=128)
+        self.conv_128_128 = BasicBlock(in_planes=128, planes=128)
+        self.conv_128_256 = BasicBlock(in_planes=128, planes=256)
+        self.conv_256_64 = BasicBlock(in_planes=256, planes=64)
+        self.conv_64_128 = BasicBlock(in_planes=64, planes=128)
+
+        #linear unit
+        self.linear = nn.Linear(2048, 10)
 
 
     def forward(self, x):
-        #generate_forward
+        out_0 = self.conv_3_256(x)
+        out_1 = self.conv_256_256(out_0)
+        out_2 = F.avg_pool2d(out_1, 2)
+        out_3 = self.conv_256_128(out_2)
+        out_4 = F.max_pool2d(out_3, 2)
+        out_5 = self.conv_128_128(out_4)
+        out_6 = self.conv_128_128(out_5)
+        out_7 = self.conv_128_256(out_6)
+        out_8 = self.conv_256_64(out_7)
+        out_9 = self.conv_64_128(out_8)
+        out_10 = F.max_pool2d(out_9, 2)
+        out = out_10
 
         out = out.view(out.size(0), -1)
         out = self.linear(out)
@@ -98,11 +122,11 @@ class TrainModel(object):
             loss = self.criterion(outputs, labels)
             loss.backward()
             optimizer.step()
-            running_loss += loss.data*labels.size(0)
+            running_loss += loss.data[0]*labels.size(0)
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels.data).sum()
-        self.log_record('Train-Epoch:%3d,  Loss: %.3f, Acc:%.3f'% (epoch+1, torch.true_divide(running_loss,total), torch.true_divide(correct,total)))
+        self.log_record('Train-Epoch:%3d,  Loss: %.3f, Acc:%.3f'% (epoch+1, torch.true_divide(running_loss,total), torch.true_divide((correct/total)))
 
     def test(self, epoch):
         self.net.eval()
@@ -114,14 +138,14 @@ class TrainModel(object):
             inputs, labels = Variable(inputs.cuda()), Variable(labels.cuda())
             outputs = self.net(inputs)
             loss = self.criterion(outputs, labels)
-            test_loss += loss.data*labels.size(0)
+            test_loss += loss.data[0]*labels.size(0)
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels.data).sum()
         if correct/total > self.best_acc:
             self.best_acc = correct/total
             #print('*'*100, self.best_acc)
-        self.log_record('Validate-Loss:%.3f, Acc:%.3f'%(torch.true_divide(test_loss,total), torch.true_divide(correct,total)))
+        self.log_record('Validate-Loss:%.3f, Acc:%.3f'%(torch.true_divide(test_loss,total), torch.true_divide(correct,total))
 
 
     def process(self):
@@ -133,8 +157,8 @@ class TrainModel(object):
 
 
 class RunModel(object):
-    def do_work(self, gpu_id, file_id):
-        os.environ['CUDA_VISIBLE_DEVICES'] = gpu_id
+    def do_work(self, file_id):
+        os.environ['CUDA_VISIBLE_DEVICES'] = "0"
         best_acc = 0.0
         try:
             m = TrainModel()
@@ -152,6 +176,5 @@ class RunModel(object):
             f.write('%s=%.5f\n'%(file_id, best_acc))
             f.flush()
             f.close()
-"""
-
-
+if __name__ == "__main__":
+    RunModel.do_work("1","1")
