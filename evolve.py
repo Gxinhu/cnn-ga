@@ -68,7 +68,7 @@ class EvolveCNN(object):
         for _, indi in enumerate(self.pops.individuals):
             _t_str = 'new -%s-%.5f-%s'%(indi.id, indi.acc, indi.uuid()[0])
             _str.append(_t_str)
-        _file = './populations/ENVI_%2d.txt'%(self.pops.gen_no)
+        _file = '/content/cnn-gapopulations/ENVI_%2d.txt'%(self.pops.gen_no)
         Utils.write_to_file('\n'.join(_str), _file)
 
         Utils.save_population_at_begin(str(self.pops), self.pops.gen_no)

@@ -75,7 +75,7 @@ class TrainModel(object):
             file_mode = 'w'
         else:
             file_mode = 'a+'
-        f = open('./log/%s.txt'%(self.file_id), file_mode)
+        f = open('/content/cnn-ga/log/%s.txt'%(self.file_id), file_mode)
         f.write('[%s]-%s\n'%(dt, _str))
         f.flush()
         f.close()
@@ -148,7 +148,7 @@ class RunModel(object):
         finally:
             m.log_record('Finished-Acc:%.3f'%best_acc)
 
-            f = open('./populations/after_%s.txt'%(file_id[4:6]), 'a+')
+            f = open('/content/cnn-ga/populations/after_%s.txt'%(file_id[4:6]), 'a+')
             f.write('%s=%.5f\n'%(file_id, best_acc))
             f.flush()
             f.close()

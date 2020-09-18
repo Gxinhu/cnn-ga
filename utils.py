@@ -183,7 +183,7 @@ class GPUTools(object):
         equipped_gpu_ids = []
         for line_info in lines:
             if not line_info.startswith(' '):
-                if 'GeForce' in line_info:
+                if 'Tesla' in line_info:
                     equipped_gpu_ids.append(line_info.strip().split(' ', 4)[3])
             else:
                 break
