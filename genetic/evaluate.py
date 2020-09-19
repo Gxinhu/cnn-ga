@@ -43,7 +43,7 @@ class FitnessEvaluate(object):
 #                 cls_obj = _class()
 #                 cls_obj.do_work('1', file_name)
                 has_evaluated_offspring = True
-                time.sleep(10)
+                # time.sleep(10)
                 gpu_id = GPUTools.detect_available_gpu_id()
                 while gpu_id is None:
                     time.sleep(300)
@@ -62,7 +62,7 @@ class FitnessEvaluate(object):
                     cls_obj = _class()
                     cls_obj.do_work('%d'%(gpu_id), file_name,)
                     # p=Process(target=cls_obj.do_work, args=('%d'%(gpu_id), file_name,))
-                    p.start()
+                    # p.start()
             else:
                 file_name = indi.id
                 self.log.info('%s has inherited the fitness as %.5f, no need to evaluate'%(file_name, indi.acc))

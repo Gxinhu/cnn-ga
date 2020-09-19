@@ -118,7 +118,7 @@ class TrainModel(object):
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels.data).sum()
-        if troch.true_didive(correct,total) > self.best_acc:
+        if torch.true_divive(correct,total) > self.best_acc:
             self.best_acc = torch.true_divide(correct,total)
             #print('*'*100, self.best_acc)
         self.log_record('Validate-Loss:%.3f, Acc:%.3f'%(torch.true_divide(test_loss,total), torch.true_divide(correct,total)))
